@@ -22,8 +22,6 @@
 
 // ...
 
-void removeArestasDuplicadas(unsigned char*, unsigned char*);
-
 // ----------------------------------------------------------------------------
 // Programa principal
 

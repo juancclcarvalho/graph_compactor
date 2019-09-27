@@ -13,11 +13,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX 2
-
 // ----------------------------------------------------------------------------
 // Prototipação de funções
-void acendeBit(int, int, unsigned char[][MAX]);
+void acendeBit(int, unsigned char*);
 
 // ...
 
@@ -33,6 +31,9 @@ int main(int argc, char *argv[])
 		  *arq_saida; 	// Arquivo binário de saída
 
     int n_vertices, n_arestas, aresta_x, aresta_y;
+
+	// Coluna do valor na matriz de adjacência compacta
+	int coluna, coluna_inversa;
 
 	if (argc != 3)
 	{
@@ -78,8 +79,10 @@ int main(int argc, char *argv[])
 	// Lê cada uma das arestas
     while (fscanf(arq_entrada, "%d %d", &aresta_x, &aresta_y) != EOF)
     {
-        acendeBit(aresta_x, aresta_y, matriz_adj_compacta);
-        acendeBit(aresta_y, aresta_x, matriz_adj_compacta);
+		coluna = aresta_y/8;
+		coluna_inversa = aresta_x/8;
+        acendeBit(aresta_y, &matriz_adj_compacta[aresta_x][coluna]);
+        acendeBit(aresta_x, &matriz_adj_compacta[aresta_y][coluna_inversa]);
     }
 
 	// Escreve no arquivo binário
@@ -97,13 +100,11 @@ int main(int argc, char *argv[])
 }
 // ----------------------------------------------------------------------------
 
-void acendeBit(int aresta_x, int aresta_y, unsigned char matriz_adj_compacta[][MAX]) {
-	// Coluna do valor na matriz de adjacência compacta
-    int coluna = aresta_y/8;
+void acendeBit(int aresta, unsigned char* matriz_adj_compacta_pos) {
 	// Peso do bit
-    int potencia = 7 - (aresta_y%8);
+    int potencia = 7 - (aresta % 8);
     unsigned char mascara = 1 << potencia;
 
 	// Acende o bit da mascara na posição correspondente da matriz de adjacência compacta 
-    matriz_adj_compacta[aresta_x][coluna] |= mascara;
+    *matriz_adj_compacta_pos |= mascara;
 }
